@@ -194,8 +194,8 @@ void find_ours_avx2(Repetition_Tester *tester, Operation_Parameters *params)
 
 Operation_Entry test_entries[] =
 {
-  {String("FIND - ours (scalar)"),   find_ours_scalar},
   {String("FIND - ours (AVX2)"),     find_ours_avx2},
+  {String("FIND - ours (scalar)"),   find_ours_scalar},
   {String("FIND - unordered_map"),   find_unordered_map},
   {String("INSERT - ours"),          insert_ours},
   {String("INSERT - unordered_map"), insert_unordered_map},

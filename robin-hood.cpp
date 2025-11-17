@@ -149,12 +149,12 @@ struct Table
 
     __m256i search_mask = _mm256_set1_epi32(hash);
     __m256i empty_mask  = _mm256_set1_epi32(0xFFFFFFFF);
-    // __m256i dist_mask   = _mm256_setr_epi32(0, 1, 2, 3, 4, 5, 6, 7);
+    __m256i dist_mask   = _mm256_setr_epi32(0, 1, 2, 3, 4, 5, 6, 7);
+    __m256i increment   = _mm256_set1_epi32(1);
 
     while (true)
     {
       __m256i check_hashes = _mm256_loadu_si256((__m256i *)&hashes[index]);
-      __m256i check_dists  = _mm256_loadu_si256((__m256i *)&distances[index]);
 
       __m256i _matches = _mm256_cmpeq_epi32(check_hashes, search_mask);
       i32 matches = _mm256_movemask_epi8(_matches);
@@ -162,7 +162,7 @@ struct Table
       while (matches)
       {
         i32 first_bit = __builtin_ctz(matches);
-        i32 slot = first_bit / 4;
+        i32 slot = first_bit >> 2;
         slot = (index + slot) & (capacity - 1);
 
         if (string_match(keys[slot], key))
@@ -174,15 +174,23 @@ struct Table
         matches &= matches - 1; // And clear the last match
       }
 
+      __m256i check_dists  = _mm256_loadu_si256((__m256i *)&distances[index]);
+      __m256i _farther = _mm256_cmpgt_epi32(check_dists, dist_mask);
+      i32 farthers = _mm256_movemask_epi8(_farther);
+      if (farthers)
+      {
+        break;
+      }
+
       __m256i _empty = _mm256_cmpeq_epi32(check_dists, empty_mask);
       i32 empties = _mm256_movemask_epi8(_empty);
-
       if (empties)
       {
         break;
       }
 
       index = (index + 8) & (capacity - 1);
+      dist_mask = _mm256_add_epi32(dist_mask, increment);
     }
 
     return result;
