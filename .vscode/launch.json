@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": ["3", "2056"],
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "cwd": "/home/wayfarer/Documents/Misery/RESEARCH/fast-robin-hood",
+      "program": "/home/wayfarer/Documents/Misery/RESEARCH/fast-robin-hood/reptest.x",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
